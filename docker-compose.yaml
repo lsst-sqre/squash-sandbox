@@ -6,6 +6,7 @@
     environment:
       MYSQL_ROOT_PASSWORD: "squash"
       MYSQL_DATABASE: "squash"
+
   squash-api:
     image: lsstsqre/squash-api:tickets-DM-31647
     container_name: squash-api
@@ -18,6 +19,19 @@
       SQUASH_DEFAULT_USER: squash
       SQUASH_DEFAULT_PASSWORD: squash
       SQLALCHEMY_DATABASE_URI: "mysql+pymysql://root:squash@mysql/squash"
+
+  worker:
+    image: lsstsqre/squash-api:tickets-DM-31647
+    container_name: worker
+    depends_on:
+      - redis
+      - squash-api
+    entrypoint: ["celery", "-A", "squash.tasks", "worker"]
+    environment:
+      CELERY_BROKER_URL: "redis://redis:6379"
+      INFLUXDB_API_URL: "http://influxdb:8086"
+      INFLUXDB_DATABASE: squash
+      SQUASH_API_URL: "http://squash-api:5000"
 
   influxdb:
     image: influxdb:1.8.5
