@@ -1,0 +1,19 @@
+  influxdb:
+    image: influxdb:1.8.5
+    container_name: influxdb
+    volumes:
+      - ./data/influxdb:/var/lib/influxdb
+    ports:
+      - "8086:8086"
+
+  # Run chronograf on port 8087 to avoid
+  # collision with Jupyter server.
+  chronograf:
+    image: chronograf:1.9.0
+    container_name: chronograf
+    environment:
+      INFLUXDB_URL: http://influxdb:8086
+    ports:
+      - "8087:8888"
+    links:
+      - influxdb
