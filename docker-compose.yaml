@@ -1,3 +1,11 @@
+  mysql:
+    image: mysql:5.7
+    container_name: mysql
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: "squash"
+      MYSQL_DATABASE: "squash"
   influxdb:
     image: influxdb:1.8.5
     container_name: influxdb
