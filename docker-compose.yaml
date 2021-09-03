@@ -1,3 +1,8 @@
+version: "3"
+services:
+  lsst:
+    image: lsstsqre/centos:d_latest
+    container_name: lsst
 
   redis:
     image: redis:alpine
