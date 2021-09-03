@@ -6,6 +6,19 @@
     environment:
       MYSQL_ROOT_PASSWORD: "squash"
       MYSQL_DATABASE: "squash"
+  squash-api:
+    image: lsstsqre/squash-api:tickets-DM-31647
+    container_name: squash-api
+    ports:
+      - "5000:5000"
+    depends_on:
+      - mysql
+    entrypoint: ["./wait-for-it.sh", "mysql:3306", "--strict", "--", "uwsgi", "uwsgi.ini"]
+    environment:
+      SQUASH_DEFAULT_USER: squash
+      SQUASH_DEFAULT_PASSWORD: squash
+      SQLALCHEMY_DATABASE_URI: "mysql+pymysql://root:squash@mysql/squash"
+
   influxdb:
     image: influxdb:1.8.5
     container_name: influxdb
