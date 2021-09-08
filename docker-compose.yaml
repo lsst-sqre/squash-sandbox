@@ -22,7 +22,7 @@ services:
       MYSQL_DATABASE: "squash"
 
   squash-api:
-    image: lsstsqre/squash-api:tickets-DM-31647
+    image: lsstsqre/squash-api:master
     container_name: squash-api
     ports:
       - "5000:5000"
@@ -35,7 +35,7 @@ services:
       SQLALCHEMY_DATABASE_URI: "mysql+pymysql://root:squash@mysql/squash"
 
   worker:
-    image: lsstsqre/squash-api:tickets-DM-31647
+    image: lsstsqre/squash-api:master
     container_name: worker
     depends_on:
       - redis
