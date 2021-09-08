@@ -30,6 +30,7 @@ services:
       - mysql
     entrypoint: ["./wait-for-it.sh", "mysql:3306", "--strict", "--", "uwsgi", "uwsgi.ini"]
     environment:
+      CELERY_BROKER_URL: "redis://redis:6379"
       SQUASH_DEFAULT_USER: squash
       SQUASH_DEFAULT_PASSWORD: squash
       SQLALCHEMY_DATABASE_URI: "mysql+pymysql://root:squash@mysql/squash"
