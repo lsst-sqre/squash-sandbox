@@ -1,0 +1,69 @@
+version: "3"
+services:
+  lsst:
+    image: lsstsqre/centos:d_latest
+    container_name: lsst
+
+  redis:
+    image: redis:alpine
+    container_name: redis
+    command:
+      - redis-server
+    ports:
+      - "6379:6379"
+
+  mysql:
+    image: mysql:5.7
+    container_name: mysql
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: "squash"
+      MYSQL_DATABASE: "squash"
+
+  squash-api:
+    image: lsstsqre/squash-api:master
+    container_name: squash-api
+    ports:
+      - "5000:5000"
+    depends_on:
+      - mysql
+    entrypoint: ["./wait-for-it.sh", "mysql:3306", "--strict", "--", "uwsgi", "uwsgi.ini"]
+    environment:
+      CELERY_BROKER_URL: "redis://redis:6379"
+      SQUASH_DEFAULT_USER: squash
+      SQUASH_DEFAULT_PASSWORD: squash
+      SQLALCHEMY_DATABASE_URI: "mysql+pymysql://root:squash@mysql/squash"
+
+  worker:
+    image: lsstsqre/squash-api:master
+    container_name: worker
+    depends_on:
+      - redis
+      - squash-api
+    entrypoint: ["celery", "-A", "squash.tasks", "worker"]
+    environment:
+      CELERY_BROKER_URL: "redis://redis:6379"
+      INFLUXDB_API_URL: "http://influxdb:8086"
+      INFLUXDB_DATABASE: squash
+      SQUASH_API_URL: "http://squash-api:5000"
+
+  influxdb:
+    image: influxdb:1.8.5
+    container_name: influxdb
+    volumes:
+      - ./data/influxdb:/var/lib/influxdb
+    ports:
+      - "8086:8086"
+
+  # Run chronograf on port 8087 to avoid
+  # collision with Jupyter server.
+  chronograf:
+    image: chronograf:1.9.0
+    container_name: chronograf
+    environment:
+      INFLUXDB_URL: http://influxdb:8086
+    ports:
+      - "8087:8888"
+    links:
+      - influxdb
