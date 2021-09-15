@@ -5,6 +5,8 @@ A `docker-compose`_ set up to run SQuaSH with the LSST stack locally. squash-san
 
 .. _docker-compose: https://docs.docker.com/compose/
 
+Disclaimer: it doesn't work on Apple M1
+
 Example 1: testing a change in the LSST verify package against the SQuaSH API
 -----------------------------------------------------------------------------
 
