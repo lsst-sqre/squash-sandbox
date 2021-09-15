@@ -74,11 +74,15 @@ You can now run dispatch_verify against the SQuaSH API
 Note that the SQuaSH API user ``squash`` was already created during initialization.
 
 
-Tier down the services
+Tear down the services
 ^^^^^^^^^^^^^^^^^^^^^^
+
+First exit the container.
+Then tear down the running services.
 
 .. code:: bash
 
+    exit
     docker-compose down
 
 Example 2: loading metric definitions and specifications to SQuaSH
