@@ -49,6 +49,7 @@ services:
       INFLUXDB_USERNAME: squash
       INFLUXDB_PASSWORD: squash
       SQUASH_API_URL: "http://squash-api:5000"
+      S3_BUCKET: ""
 
   influxdb:
     image: influxdb:1.8.5
