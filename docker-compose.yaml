@@ -46,6 +46,8 @@ services:
       CELERY_BROKER_URL: "redis://redis:6379"
       INFLUXDB_API_URL: "http://influxdb:8086"
       INFLUXDB_DATABASE: squash
+      INFLUXDB_USERNAME: squash
+      INFLUXDB_PASSWORD: squash
       SQUASH_API_URL: "http://squash-api:5000"
 
   influxdb:
@@ -56,6 +58,10 @@ services:
     ports:
       - "8086:8086"
 
+    environment:
+      INFLUXDB_DB: squash
+      INFLUXDB_ADMIN_USER: squash
+      INFLUXDB_ADMIN_PASSWORD: squash
   # Run chronograf on port 8087 to avoid
   # collision with Jupyter server.
   chronograf:
@@ -67,3 +73,7 @@ services:
       - "8087:8888"
     links:
       - influxdb
+    environment:
+      INFLUXDB_URL: http://influxdb:8086
+      INFLUXDB_USERNAME: squash
+      INFLUXDB_PASSWORD: squash
