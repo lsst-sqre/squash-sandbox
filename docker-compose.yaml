@@ -68,11 +68,9 @@ services:
   chronograf:
     image: chronograf:1.9.0
     container_name: chronograf
-    environment:
-      INFLUXDB_URL: http://influxdb:8086
     ports:
       - "8087:8888"
-    links:
+    depends_on:
       - influxdb
     environment:
       INFLUXDB_URL: http://influxdb:8086
